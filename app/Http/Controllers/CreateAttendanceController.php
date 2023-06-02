@@ -59,9 +59,8 @@ class CreateAttendanceController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request;
         $request->validate([
-            'course_code'  =>  'required|string',
+            'course_code'=>  'required|string',
             'starts_at'  =>  'required|string',
             'ends_at'    =>  'required|string',
         ]);
@@ -151,7 +150,6 @@ class CreateAttendanceController extends Controller
             return redirect()->back()->with('error','Something wents wrong!');
         }
           
-        // return $createAttendance;
     }
 
 }

@@ -31,7 +31,9 @@
                         <div class="col-12 ">
                             <a class="btn" href="{{ route('attendance.create') }}">Back</a>
                         </div>
-                        {{$course->curriculum->course_code}}
+                        <div class="text-center">
+                            <h3>{{$course->curriculum->course_code}} Attendance List</h3>
+                        </div>
                         <div class="col-12 ">
                             {{-- @foreach ($course->curriculum as $item)
                                 <h4 class="float-left">List of Attendees for {{$item->course_code}}</h4>
@@ -46,26 +48,46 @@
                                   <tr>
                                     <th>S/No</th>
                                     <th>Names</th>
-                                    <th>Registration Number</th>
-                                    <th>Level</th>
+                                    <th>Reg. Number</th>
+                                    <th>Course</th>
                                     <th>Actions</th>
                                   </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- @foreach ($createdAtt as $i => $crtA)
+                                    
+                                    @foreach ($attendees as $i => $list)
                                         <tr>
                                             <td>{{++$i}}</td>
+                                            <td>{{ $list->names }}</td>
+                                            <td>{{$list->registration_number}}</td>
                                             <td>
-                                                @foreach ($crtA->curriculum as $inner)
-                                                {{$inner->course_code}}
+                                                @foreach ($list->createAttendance as $item)
+                                                    {{ $item->curriculum->course_code }}
                                                 @endforeach
                                             </td>
-                                            <td>{{$crtA->starts_at}}</td>
-                                            <td>{{$crtA->ends_at}}</td>
-                                            <td>{{$crtA->created_at}}</td>
-                                            <td><a href="">view</a></td>
+                                            {{-- <td><button onclick="confirm('are u sure')">del</button></td> --}}
+                                            <td>
+                                                <button class="btn text-danger" data-toggle="modal" data-target="#confirmDel{{ $i }}">Delete</button>
+                                                <div class="modal" id="confirmDel{{ $i }}">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5>Confirm deletion</h5>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <h5>Are you sure you want to delete <b>{{ $list->registration_number }}</b>?</h5>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button class="btn" data-dismiss="modal">No</button>
+                                                                <a href="{{ route('join.attendance.destroy', $list->uuid) }}" class="btn">Yes</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            {{-- <td><a href="{{ route('join.attendance.destroy', $list->uuid) }}">Delete</a></td> --}}
                                         </tr>
-                                    @endforeach --}}
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>

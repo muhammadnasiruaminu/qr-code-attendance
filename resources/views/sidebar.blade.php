@@ -9,6 +9,9 @@
             <a class="nav-link" href="{{ route('staff.index') }}">Dashboard</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link" href="{{ route('staff.users') }}">Users</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link" href="{{ route('department.index') }}">Departments</a>
         </li>
         <li class="nav-item">

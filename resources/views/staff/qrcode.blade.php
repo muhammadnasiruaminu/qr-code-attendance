@@ -31,10 +31,14 @@
                     <div class="col-12"><a href="{{ route('attendance.create') }}" class="btn float-left">Back</a></div>
                     <div class="col-md-12 col-sm-12">
                         <div class="">
-                         {{'Course code: '.$attend_qr->curriculum->course_code.  ' Starts: '. $attend_qr->starts_at. ' Ends at: '. $attend_qr->ends_at}} <br> <br>
+                            <div class="text-center">
+                                <h4>{{'Course code: '.$attend_qr->curriculum->course_code.  ' Starts: '. $attend_qr->starts_at. ' Ends at: '. $attend_qr->ends_at}}</h4> <br>
+                            </div>
+
                             <div class="visible-print text-center">
-                                {!! QrCode::format('svg')->size(300)->generate($attend_qr->token); !!}  
-                                {{-- {!! QrCode::format('svg')->size(300)->generate('Course code: '.$attend_qr->curriculum->course_code.  ' Starts: '. $attend_qr->starts_at. ' Ends at: '. $attend_qr->ends_at); !!}   --}}
+
+                                {!! QrCode::format('svg')->size(300)->generate('http://127.0.0.1:8000/authenticate-student/'.$attend_qr->token); !!}
+                                
                             </div>
                             <div class="pull-right">
                                 <div class="btn-group">

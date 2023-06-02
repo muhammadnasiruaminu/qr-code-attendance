@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\CheckUser;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\CourseOfStudy;
-use Illuminate\Support\Str;
+use App\Models\CreateAttendance;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class StudentController extends Controller
 {
@@ -16,8 +20,28 @@ class StudentController extends Controller
      */
     public function index()
     {
-        $course =  Student::with('courseOfStudy')->get();
-        return view('student.index');
+        $activeClass  =   CreateAttendance::with('curriculum')->where('active_status','1')->get();
+        return view('student.dashboard', [ 'activeClassess' => $activeClass]);
+    }
+
+    public function checkStudentPage()
+    {
+        return view('student.check-student');
+    }
+
+    public function checkStudent(Request $request)
+    {
+        $request->validate([
+            'registrationNumber' => 'required|string|unique:students,registration_number'
+        ]);
+        $check = CheckUser::where('registration_number',$request->registrationNumber)->first();
+        if ($check) {
+            return redirect()->route('student.create')->with('success','Registration Number found, you can proceed with your registration.');
+        } else {
+            return redirect()->back()->with('error', 'Registration Number not found, please contact the administrator if you are a valid student.');
+        }
+
+        return view('student.check-student');
     }
 
     /**
@@ -25,12 +49,10 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($uuid)
+    public function create()
     {
-        // return $uuid;
-        $course     =   CourseOfStudy::all();
-        $student    =   Student::where('uuid', $uuid)->first();
-        return view('student.create')->with(['key' => $course, 'stud' => $student]);
+        
+        return view('student.create');
     }
 
     /**
@@ -39,30 +61,32 @@ class StudentController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $uuid)
+    public function store(Request $request)
     {
-        // return $request;
         $request->validate([
-            'fullName'      =>   'required|string',
-            'regNumber'     =>   'required|string',
-            'email'         =>   'required|string',
-            'phoneNumber'   =>   'required|string',
-            'level'         =>   'required|string',
-            'courseOfStudy' =>   'required|string'
+            'registrationNumber'=>   'required|string|unique:users,registration_number',
+            // 'level'             =>   'required|string',
+            'fullName'          =>   'required|string',
+            'email'             =>   'required|string',
+            // 'phoneNumber'       =>   'required|string',
+            'password'          =>   'required|string|min:5',
         ]);
 
-        $update                        =   Student::where('uuid',$uuid)->first();
-        $update->full_name             =   $request->fullName;
-        $update->reg_number            =   $request->regNumber;
-        $update->email                 =   $request->email;
-        $update->phone_number          =   $request->phoneNumber;
-        $update->level                 =   $request->level;
-        $update->course_of_study_uuid  =   $request->courseOfStudy;
-        $ok = $update->save();
-        if ($ok) {
-            return 'updated';
-        }else {
-            return 'akwai matsala';
+        $register                =   Student::create([
+            'uuid'               =>  Str::orderedUuid(),
+            'names'               =>  $request->fullName,
+            'registration_number'=>  $request->registrationNumber,
+            'email'              =>  $request->email,
+            'is_staff'           =>  '0',
+            'is_verified'        =>  1,
+            'password'           =>  Hash::make($request->password),
+        ]);
+
+        if ($register) {
+            $request->session()->put('loggedUser', $register->uuid);
+            return redirect()->route('student.index')->with('success', 'Registration successful, kindly login to continue.');
+        } else {
+            return redirect()->back()->with('error', 'Something wents wrong.');
         }
     }
 
@@ -74,9 +98,7 @@ class StudentController extends Controller
      */
     public function show(Student $student, $uuid)
     {
-       $student    =   Student::with('courseOfStudy')->where('uuid', $uuid)->get();
-        // $student    =   Student::where('uuid', $uuid)->first();
-        // return $student;
+        $student    =   Student::with('courseOfStudy')->where('uuid', $uuid)->get();
         return view('student.dashboard',['key' => $student]);
     }
 
@@ -114,30 +136,37 @@ class StudentController extends Controller
         //
     }
 
-    public function registerPage()
+    
+
+    public function studentLoginPage()
     {
-        return view('student.register');
+        return view('student.login');
     }
 
-    public function register(Request $request)
+    public function studentLogin(Request $request)
     {
-        // return $request;
         $request->validate([
-            'fullName'   =>  'required|string',
-            'regNumber'  =>  'required|string',
-            'email'      =>  'required|string'
+            'registrationNumber'=>  'required|string',
+            'password'          =>  'required|string|min:5'
         ]);
 
-        $reg_student    =   Student::create([
-            'uuid'      =>  Str::orderedUuid(),
-            'full_name' =>  $request->fullName,
-            'reg_number' =>  $request->regNumber,
-            'email'     =>  $request->email,
-        ]);
+        if (Auth::guard('student')->attempt(['registration_number' => $request->registrationNumber, 'password' => $request->password, 'is_verified' => 1])) {
+            // return Auth::guard('student')->user();
+            return redirect()->route('student.index');
+        } else {
+            return redirect()->back()->with('error', 'Something wents wrong.');
+        }
 
-        $_SESSION['username']   =   $reg_student->full_name;
+    }
 
-        // return $_SESSION['username'];
-        return redirect()->route('student.create')->with('success','Account creation successfull. Kindly login to complete your profile.');
+    public function studentLogout()
+    {
+        Auth::guard('student')->logout();
+        return redirect()->route('student.login');
+    }
+
+    public function openCamera()
+    {
+        return view('student.open-camera');
     }
 }

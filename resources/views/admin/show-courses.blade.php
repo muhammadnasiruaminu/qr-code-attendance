@@ -27,7 +27,7 @@
                     <div class="">
                         <div class="">
                             <div class="float-right">
-                                <a href="{{ route('course.create') }}" class="btn">Create</a>
+                                <a href="{{ route('course.create') }}" class="btn btn-primary">Create</a>
                             </div>
                             <h3>Course of Study/Programme</h3>
                             <div class="table-responsive">

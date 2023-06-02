@@ -22,4 +22,9 @@ class CreateAttendance extends Model
         // return $this->hasMany(Curriculum::class, 'uuid', 'course_uuid');
         return $this->hasOne(Curriculum::class, 'uuid', 'course_uuid');
     }
+
+    public function joinAttendance()
+    {
+        return $this->belongsTo(JoinAttendance::class, 'uuid', 'create_attendances_uuid');
+    }
 }

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Staff extends Model
 {
     use HasFactory;
+    
     protected $guard = 'staff';
 
     protected $fillable = [

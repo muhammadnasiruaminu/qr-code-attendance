@@ -15,63 +15,45 @@
 <body>
     <div class="container mt-5">
         <div class="row">
-            <div class="col-md-3" style="padding:20px; background-color:#f8f9fa;">
+            {{-- <div class="col-md-3" style="padding:20px; background-color:#f8f9fa;">
                 @include('sidebar')
-                {{-- <nav class="navbar bg-light">
-                    <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link 1</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link 2</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link 3</a>
-                        </li>
-                    </ul>
-                </nav> --}}
             </div>
 
-            <div class="col-md-1"></div>
+            <div class="col-md-1"></div> --}}
 
-            <div class="col-md-8 bg-light" style="padding:20px; background-color:#f8f9fa;">
+            <div class="col-md-4 offset-md-4 bg-light" style="padding:20px; background-color:#f8f9fa;">
                 @include('messages')
                 <form action="" method="POST">
                     @csrf
                     <div class="row">
-                        <div class="col-md-6 form-group">
-                            <label for="">Full Name</label>
-                            <input type="text" class="form-control" name="fullName" value="{{$stud->full_name}}">
-                        </div>
-
-                        <div class="col-md-6 form-group">
+                        <div class="col-md-12 form-group">
                             <label for="">Registration Number</label>
-                            <input type="text" class="form-control" name="regNumber" value="{{$stud->reg_number}}">
+                            <input type="text" class="form-control" name="registrationNumber" value="">
                         </div>
 
-                        <div class="col-md-6 form-group">
-                            <label for="">Email</label>
-                            <input type="text" class="form-control" name="email" value="{{$stud->email}}">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <label for="">Phone Number</label>
-                            <input type="text" class="form-control" name="phoneNumber" value="">
-                        </div>
-
-                        <div class="col-md-6 form-group">
+                        {{-- <div class="col-md-12 form-group">
                             <label for="">Level</label>
                             <input type="text" class="form-control" name="level" value="">
+                        </div> --}}
+
+                        <div class="col-md-12 form-group">
+                            <label for="">Full Name</label>
+                            <input type="text" class="form-control" name="fullName" value="">
                         </div>
 
-                        <div class="col-md-6 form-group">
-                            <label for="">Course of Study</label>
-                            <select class="form-control" name="courseOfStudy" id="">
-                                <option value="">-- select course --</option>
-                                @foreach ($key as $item)
-                                    <option value="{{$item->uuid}}">{{$item->course_of_study}}</option>
-                                @endforeach
-                            </select>
+                        <div class="col-md-12 form-group">
+                            <label for="">Email</label>
+                            <input type="email" class="form-control" name="email" value="">
+                        </div>
+
+                        {{-- <div class="col-md-12 form-group">
+                            <label for="">Phone Number</label>
+                            <input type="text" class="form-control" name="phoneNumber" value="">
+                        </div> --}}
+
+                        <div class="col-md-12 form-group">
+                            <label for="">Password</label>
+                            <input type="password" class="form-control" name="password" value="">
                         </div>
 
                         <div class="col-md-12">

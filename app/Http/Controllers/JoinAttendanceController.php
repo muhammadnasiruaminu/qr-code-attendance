@@ -24,11 +24,12 @@ class JoinAttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($uuid)
+    public function create($uuid) // create attendance uuid
     {
         // return $uuid;
         $join = CreateAttendance::with('curriculum')->where('uuid', $uuid)->first();
-        return view('staff.join-attendance', ['course' => $join]);
+        $viewJoined     =   JoinAttendance::with('createAttendance.curriculum')->where('create_attendances_uuid', $uuid)->get();
+        return view('staff.join-attendance', ['course' => $join, 'attendees' => $viewJoined]);
     }
 
     /**
@@ -84,6 +85,12 @@ class JoinAttendanceController extends Controller
      */
     public function destroy(JoinAttendance $joinAttendance)
     {
-        //
+        $deleteAtt  =   $joinAttendance->delete();
+        if ($deleteAtt) {
+            return redirect()->back()->with('success','Attendance deleted successfully.');
+        } else {
+            return redirect()->back()->with('error','Something wents wrong!');
+        }
+        
     }
 }

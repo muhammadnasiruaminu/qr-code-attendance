@@ -18,8 +18,9 @@ class CreateJoinAttendancesTable extends Migration
             $table->string('uuid',100)->unique();
             $table->string('names',100);
             $table->string('registration_number',100);
-            $table->string('level',100);
+            $table->string('create_attendances_uuid',100);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

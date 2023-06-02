@@ -1,14 +1,14 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\StudentController;
-use App\Http\Controllers\CourseOfStudyController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\StaffController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\CurriculumController;
-use App\Http\Controllers\CreateAttendanceController;
+use App\Http\Controllers\CourseOfStudyController;
 use App\Http\Controllers\JoinAttendanceController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\CreateAttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,16 +25,40 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/qrcode', function () {
-    return view('qrcode')->name('qrcode');
-});
+// Route::get('/qrcode', function () {
+//     return view('qrcode')->name('qrcode');
+// });
 
-Route::get('/index', [StudentController::class, 'index'])->name('student.index');
-Route::get('/dashboard/{key:student}', [StudentController::class, 'show'])->name('student.show');
-Route::get('/register', [StudentController::class, 'registerPage'])->name('student.registerPage');
-Route::post('/register', [StudentController::class, 'register'])->name('student.register');
-Route::get('/sign-up/{key:uuid}', [StudentController::class, 'create'])->name('student.create');
-Route::post('/sign-up/{key:uuid}', [StudentController::class, 'store'])->name('student.store');
+/* USER (staff) LOGIN AND REGISTRATION */
+
+Route::get('/dashboard', [UserController::class, 'index'])->name('staff.index');
+Route::get('/users', [UserController::class, 'users'])->name('staff.users');
+Route::get('/register-staff', [UserController::class, 'create'])->name('staff.create');
+Route::post('/register-staff', [UserController::class, 'store'])->name('staff.store');
+Route::get('/login', [UserController::class, 'loginPage'])->name('staff.loginPage');
+Route::post('/login', [UserController::class, 'login'])->name('staff.login');
+Route::get('/logout', [UserController::class, 'logout'])->name('staff.logout');
+Route::put('update-user/{user}', [UserController::class, 'update'])->name('staff.update');
+
+
+/* STUDENT LOGIN AND REGISTRATION */
+/* student user; check if student is uploaded to the DB by admin*/
+Route::get('/check-student', [StudentController::class, 'checkStudentPage'])->name('student.checkStudentPage');
+Route::post('/check-student', [StudentController::class, 'checkStudent'])->name('student.checkstudent');
+/*  if student found i.e if reg number found, register/sign up the student */
+Route::get('/register-student', [StudentController::class, 'create'])->name('student.create');
+Route::post('/register-student', [StudentController::class, 'store'])->name('student.store');
+Route::get('/student-dashboard', [StudentController::class, 'index'])->name('student.index');
+Route::get('/student-login', [StudentController::class, 'studentLoginPage'])->name('student.loginPage');
+Route::post('/student-login', [StudentController::class, 'studentLogin'])->name('student.login');
+Route::get('/student-logout', [StudentController::class, 'studentLogout'])->name('student.logout');
+Route::get('/open-camera', [StudentController::class, 'openCamera'])->name('student.openCamera');
+
+// Route::get('/upload-students', [StudentController::class, 'uploadStudentsPage'])->name('user.uploadStudentsPage');
+// Route::post('/upload-students', [StudentController::class, 'uploadStudents'])->name('user.uploadStudents');
+
+// Route::post('/upload-users', [StudentController::class, 'uploadUsers'])->name('user.uploadUsers');
+
 
 /* course of study */
 Route::get('/courses', [CourseOfStudyController::class, 'index'])->name('course.index');
@@ -56,17 +80,18 @@ Route::post('/attendance/stop/{uuid}', [CreateAttendanceController::class, 'stop
 
 /*  page for creating the real attendance i.e the students that attended/join an attendance */
 Route::get('/join-attendance/{course_code}', [JoinAttendanceController::class, 'create'])->name('join.attendance.create');
-Route::post('/join-attendance', [JoinAttendanceController::class, 'store'])->name('join.attendance.store');
+// Route::post('/join-attendance', [JoinAttendanceController::class, 'store'])->name('join.attendance.store');
+Route::get('/delete-attendance/{joinAttendance:uuid}', [JoinAttendanceController::class, 'destroy'])->name('join.attendance.destroy');
 
 
 // Route::get('/register-staff', [StaffController::class, 'registerStfPage'])->name('staff.registerStfPage');
 // Route::post('/register-staff', [StaffController::class, 'registerStf'])->name('staff.registerStf');
-Route::get('/staff-dashboard', [StaffController::class, 'index'])->name('staff.index');
-Route::get('/sign-up', [StaffController::class, 'create'])->name('staff.create');
-Route::post('/sign-up', [StaffController::class, 'store'])->name('staff.store');
-Route::get('/staff-login', [StaffController::class, 'staffLoginPage'])->name('staff.staffLoginPage');
-Route::post('/staff-login', [StaffController::class, 'staffLogin'])->name('staff.login');
-Route::get('/logout', [StaffController::class, 'logout'])->name('staff.logout');
+// Route::get('/staff-dashboard', [StaffController::class, 'index'])->name('staff.index');
+// Route::get('/sign-up', [StaffController::class, 'create'])->name('staff.create');
+// Route::post('/sign-up', [StaffController::class, 'store'])->name('staff.store');
+// Route::get('/staff-login', [StaffController::class, 'staffLoginPage'])->name('staff.staffLoginPage');
+// Route::post('/staff-login', [StaffController::class, 'staffLogin'])->name('staff.login');
+// Route::get('/logout', [StaffController::class, 'logout'])->name('staff.logout');
 
 
 /* Department */
@@ -80,25 +105,16 @@ Route::get('/curriculum/create', [CurriculumController::class, 'create'])->name(
 Route::post('/curriculum/create', [CurriculumController::class, 'store'])->name('curriculum.store');
 Route::post('/curriculum/update/{curriculum:uuid}', [CurriculumController::class, 'update'])->name('curriculum.update');
 
-/* USER LOGIN AND REGISTRATION */
-/* student user; check if student is uploaded to the DB by admin*/
-Route::get('/check-user', [UserController::class, 'checkUserPage'])->name('user.checkUserPage');
-Route::post('/check-user', [UserController::class, 'checkUser'])->name('user.checkUser');
-/*  if user found i.e if reg number found, register/sign up the student */
-Route::get('/register-user', [UserController::class, 'create'])->name('user.create');
-Route::post('/register-user', [UserController::class, 'store'])->name('user.store');
-Route::get('/dashboard', [UserController::class, 'index'])->name('user.index');
-Route::get('/login', [UserController::class, 'loginPage'])->name('user.loginPage');
-Route::post('/login', [UserController::class, 'login'])->name('user.login');
-Route::get('/logout', [UserController::class, 'logout'])->name('user.logout');
-Route::get('/open-camera', [UserController::class, 'openCamera'])->name('user.openCamera');
+// /* USER LOGIN AND REGISTRATION */
+// Route::get('/upload-students', [UserController::class, 'uploadStudentsPage'])->name('user.uploadStudentsPage');
+// Route::post('/upload-students', [UserController::class, 'uploadStudents'])->name('user.uploadStudents');
 
-Route::get('/upload-students', [UserController::class, 'uploadStudentsPage'])->name('user.uploadStudentsPage');
-Route::post('/upload-students', [UserController::class, 'uploadStudents'])->name('user.uploadStudents');
+// Route::post('/upload-users', [UserController::class, 'uploadUsers'])->name('user.uploadUsers');
 
-Route::post('/upload-users', [UserController::class, 'uploadUsers'])->name('user.uploadUsers');
+// the page after scanning qr-code
+Route::get('/authenticate-student/{token}', [UserController::class, 'authenticateStudentPage'])->name('user.authenticateStudentPage');
+// Route::post('/authenticate-student', [UserController::class, 'authenticateStudent'])->name('user.authenticateStudent');
 
-// the page after sanning qr-code
-Route::get('/authenticate-student', [UserController::class, 'authenticateStudentPage'])->name('user.authenticateStudentPage');
-Route::post('/authenticate-student', [UserController::class, 'authenticateStudent'])->name('user.authenticateStudent');
-
+// Route::group(['middleware' => ['auth:staff']], function() {
+//     Route::get('/users', [UserController::class, 'users']);
+//   });

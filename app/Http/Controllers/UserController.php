@@ -2,16 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\CheckUser;
-use App\Models\CourseOfStudy;
-use App\Models\User;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Hash;
-use App\Models\CreateAttendance;
-use Excel;
 use DB;
+use Excel;
+use App\Models\User;
+use App\Models\CheckUser;
+use Illuminate\Support\Str;
+use Illuminate\Http\Request;
 use App\Imports\UsersImport;
+use App\Models\CourseOfStudy;
+use App\Models\JoinAttendance;
+use App\Models\CreateAttendance;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
+
 
 
 class UserController extends Controller
@@ -21,47 +24,12 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function openCamera()
-    {
-        return view('user.open-camera');
-    }
 
     public function index()
     {
-        if (session()->has('loggedUser')) {
-            $user  =  User::where('uuid', '=', session('loggedUser'))->first();
-            $data  =  [
-                'loggedUserInfo' => $user
-            ];
-        } else{
-            // return 'bakayi login ba';
-            return redirect()->route('user.login');
-        }
-        $activeClass  =   CreateAttendance::with('curriculum')->where('active_status','1')->get();
-        return view('user.dashboard', $data, ['activeClassess' => $activeClass]);
+        return view('user.dashboard');
     }
 
-    public function checkUserPage()
-    {
-        //
-        return view('user.check-user');
-    }
-
-    public function checkUser(Request $request)
-    {
-        $request->validate([
-            'registrationNumber' => 'required|string|unique:users,registration_number'
-        ]);
-        $check = CheckUser::where('registration_number',$request->registrationNumber)->first();
-        if ($check) {
-            // $user_sess = $_SESSION['username'];
-            return redirect()->route('user.create')->with('success','Registration Number found, you can proceed with your registration.');
-        } else {
-            return redirect()->back()->with('error', 'Registration Number not found, please contact the administrator if you are a valid student.');
-        }
-
-        return view('user.check-user');
-    }
 
     /**
      * Show the form for creating a new resource.
@@ -70,9 +38,13 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
-        // $course     =   CourseOfStudy::all();
         return view('user.create');
+    }
+
+    public function users()
+    {
+        $users  =   User::all();
+        return view('user.index', ['users' => $users]);
     }
 
     /**
@@ -83,31 +55,24 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $request->validate([
-            'registrationNumber'=>   'required|string|unique:users,registration_number',
-            'level'             =>   'required|string',
-            'fullName'          =>   'required|string',
-            'email'             =>   'required|string',
-            'phoneNumber'       =>   'required|string',
-            'password'          =>   'required|string|min:5',
+            'fullName'   =>   'required|string',
+            'psn'        =>   'required|string|unique:users,psn',
+            'email'      =>   'required|string|unique:users,email',
+            'phoneNumber'=>   'required|string',
         ]);
 
-        $register                =   User::create([
-            'uuid'               =>  Str::orderedUuid(),
-            'name'               =>  $request->fullName,
-            'registration_number'=>  $request->registrationNumber,
-            'email'              =>  $request->email,
-            'is_staff'           =>  $request->is_staff,
-            'is_verified'        =>  1,
-            'password'           =>  Hash::make($request->password),
+        $create = User::create([
+            'uuid'           =>   Str::orderedUuid(),
+            'full_name'      =>   $request->fullName,
+            'psn'            =>   $request->psn,
+            'email'          =>   $request->email,
+            'phone_number'   =>   $request->phoneNumber,
+            'password'       =>   Hash::make(123456)
         ]);
-
-        if ($register) {
-            $request->session()->put('loggedUser', $register->uuid);
-            return redirect()->route('user.index')->with('success', 'Registration successful, kindly login to continue.');
-            // return redirect()->route('user.index')->with('success', 'Registration successful.');
-        } else {
+        if ($create) {
+            return redirect()->back()->with('success','Account creation successfull. Kindly use 123456 as your default password for login.');
+        }else {
             return redirect()->back()->with('error', 'Something wents wrong.');
         }
 
@@ -121,34 +86,24 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        // return $request;
         $request->validate([
-            'registrationNumber'=>  'required|string',
-            'password'          =>  'required|string|min:5'
+            'psn'       =>  'required|string',
+            'password'  =>  'required|string|min:5'
         ]);
 
-    //    $user = User::where('registration_number', '=', $request->registrationNumber)->first();
-    $user = User::where(['registration_number' => $request->registrationNumber, 'is_verified' => 1])->first();
-       if ($user) {
-           if (Hash::check($request->password, $user->password)) {
-               $request->session()->put('loggedUser', $user->uuid);
-               return redirect()->route('user.index');
-           } else {
-            return redirect()->back()->with('error', 'Invalid password.');
-           }
-
-       } else {
-        return redirect()->back()->with('error', 'No account found for this Registration Number.');
-       }
-
+        if (Auth::attempt(['psn' => $request->psn, 'password' => $request->password, 'is_active' => 1])) {
+            // return redirect()->intended('dashboard');
+            return redirect()->route('staff.index');
+        } else {
+            return redirect()->back()->with('error', 'Something wents wrong.');
+        }
+        
     }
 
     public function logout()
     {
-        if (session()->has('loggedUser')) {
-            session()->pull('loggedUser');
-            return redirect()->route('user.login');
-        }
+        Auth::guard('web')->logout();
+        return redirect()->route('staff.login');
     }
 
     /**
@@ -182,7 +137,7 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        return 'update';
     }
 
     /**
@@ -202,8 +157,6 @@ class UserController extends Controller
 
     public function uploadStudents(Request $request)
     {
-        // return DB::select('select * from staff where 1');
-    //    return DB::table('staff')->get();
         $request->validate(['file' => 'required|mimes:xls,xlsx']);
 
         $path   =    $request->file('file')->getRealPath();
@@ -236,9 +189,40 @@ class UserController extends Controller
         return redirect()->back()->with('success', 'User Imported Successfully');
     }
 
-    public function authenticateStudentPage()
+    public function authenticateStudentPage($token)
     {
-        return CreateAttendance::all();
+        $check   =   CreateAttendance::where(['token' => $token, 'active_status' => '1'])->where('ends_at', '>=', date('H:i'))->first();
+        // return $check->ends_at.' with '. date('H:i');
+        // return date('g-i'); where ends is <= now
+        if ($check) {
+            // check so as not to attend same lecture twice
+            $checkDouble    =   JoinAttendance::where(['registration_number' => Auth::guard('student')->user()->registration_number, 'create_attendances_uuid' => $check->uuid])->first();
+            if ( $checkDouble) {
+                return redirect()->back()->with('error', 'Attendance already captured.');
+            } else {
+                $save  = [
+                    'uuid'                   =>    Str::orderedUuid(),
+                    'names'                  =>    Auth::guard('student')->user()->names,
+                    'registration_number'    =>    Auth::guard('student')->user()->registration_number,
+                    'create_attendances_uuid'=>    $check->uuid,
+                ];
+
+                $attend  =   JoinAttendance::insertOrIgnore($save);
+
+            }
+            
+            if ($attend) {
+                return redirect()->route('student.index')->with('success', 'Attendance captured successfully, Thank you.');
+            } else {
+                return redirect()->route('student.index')->with('error', 'Something wents wrong.');
+            }
+            
+
+        } else {
+            return redirect()->route('student.index')->with('error', 'Attendance not found, kindly contact administrator.');
+ 
+        }
+        
         // return view('user.authenticate-student');
     }
 

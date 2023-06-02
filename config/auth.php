@@ -40,6 +40,11 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'student' => [
+            'driver' => 'session',
+            'provider' => 'students',
+        ],
     ],
 
     /*
@@ -65,9 +70,9 @@ return [
             'model' => App\Models\User::class,
         ],
 
-        'staff' => [
+        'students' => [
             'driver' => 'eloquent',
-            'model' => App\Models\Staff::class,
+            'model' => App\Models\Student::class,
         ],
 
         // 'users' => [
@@ -99,8 +104,8 @@ return [
             'throttle' => 60,
         ],
 
-        'staff' => [
-            'provider' => 'staff',
+        'student' => [
+            'provider' => 'student',
             'table' => 'password_resets',
             'expire' => 60,
             'throttle' => 60,

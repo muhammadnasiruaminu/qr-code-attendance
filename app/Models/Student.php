@@ -4,20 +4,44 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 
-class Student extends Model
+
+class Student extends Authenticatable
 {
     use HasFactory;
+
+    protected $guard = 'student';
+
     
     protected $fillable = [
         'uuid',
-        'full_name',
-        'reg_number',
+        'names',
         'email',
-        'phone_number',
-        'level',
-        // 'course_of_study'
-        'course_of_study_uuid'
+        'password',
+        'registration_number',
+        'is_staff',
+        'is_verified'
+    ];
+
+
+    /**
+     * The attributes that should be hidden for serialization.
+     *
+     * @var array<int, string>
+     */
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'email_verified_at' => 'datetime',
     ];
 
     /**
@@ -25,8 +49,8 @@ class Student extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function courseOfStudy()
-    {
-        return $this->belongsTo(CourseOfStudy::class, 'course_of_study_uuid', 'uuid');
-    }
+    // public function courseOfStudy()
+    // {
+    //     return $this->belongsTo(CourseOfStudy::class, 'course_of_study_uuid', 'uuid');
+    // }
 }
