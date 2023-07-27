@@ -51,7 +51,7 @@
                                                 <td>{{$course->duration}}</td>
                                                 <td>{{$course->created_at}}</td>
                                                 <td>
-                                                    <button class="btn" data-toggle="modal" data-target="#editDepartmentModal{{ $course->uuid }}"><span class="text-primary">edit</span></button>
+                                                    <button class="btn" data-toggle="modal" data-target="#editDepartmentModal{{ $course->uuid }}"><span class="text-primary fa fa-edit">edit</span></button>
                                                 </td>
                                                 <!-- edit department mosdal -->
                                                     <div class="modal" id="editDepartmentModal{{ $course->uuid }}">

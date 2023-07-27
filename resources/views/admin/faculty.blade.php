@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Departments</title>
+    <title>facultys</title>
     <link rel="stylesheet" href="{{asset('bootstrap.min.css')}}">
     <style>
         body{
@@ -27,9 +27,9 @@
                     <div class="">
                         <div class="">
                             <div class="float-right">
-                                <a href="{{ route('department.create') }}" class="btn btn-primary">Create</a>
+                                <a href="{{ route('faculty.create') }}" class="btn btn-primary">Create</a>
                             </div>
-                            <h3>Departments</h3>
+                            <h3>Faculties</h3>
                             <div class="table-responsive">
                                 <table class="table table-striped table-hover mt-5">
                                     <thead>
@@ -37,31 +37,29 @@
                                         <th>S/No</th>
                                         <th>Name</th>
                                         <th>Initial</th>
-                                        <th>Faculty</th>
                                         <th>Created Date</th>
                                         <th>Actions</th>
                                       </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($departments as $i => $department)
+                                        @foreach ($faculties as $i => $faculty)
                                             <tr>
                                                 <td>{{++$i}}</td>
-                                                <td>{{$department->department_name}}</td>
-                                                <td>{{$department->department_initial}}</td>
-                                                <td>{{$department->faculty->faculty_name}}</td>
-                                                <td>{{$department->created_at}}</td>
+                                                <td>{{$faculty->faculty_name}}</td>
+                                                <td>{{$faculty->faculty_initial}}</td>
+                                                <td>{{$faculty->created_at}}</td>
                                                 <td>
-                                                    <button class="btn" data-toggle="modal" data-target="#editDepartmentModal{{ $department->uuid }}"><span class="text-primary fa fa-edit">edit</span></button>
+                                                    <button class="btn" data-toggle="modal" data-target="#editFacultyModal{{ $faculty->uuid }}"><span class="text-primary fa fa-edit">edit</span></button>
                                                 </td>
-                                                <!-- edit department mosdal -->
-                                                    <div class="modal" id="editDepartmentModal{{ $department->uuid }}">
+                                                <!-- edit faculty modal -->
+                                                    <div class="modal" id="editFacultyModal{{ $faculty->uuid }}">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
-                                                                <form action="{{ route('department.update', $department->uuid) }}" method="POST">
+                                                                <form action="{{ route('faculty.update', $faculty->uuid) }}" method="POST">
                                                                     @csrf
                                                                     <!-- Modal Header -->
                                                                     <div class="modal-header">
-                                                                        <h4 class="modal-title">Edit Department</h4>
+                                                                        <h4 class="modal-title">Edit Faculty</h4>
                                                                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                                                                     </div>
 
@@ -69,24 +67,13 @@
                                                                     <div class="modal-body">
                                                                         <div class="row">
                                                                             <div class="col-md-12 form-group">
-                                                                                <label for="">Department Name</label>
-                                                                                <input type="text" class="form-control" name="departmentName" value="{{$department->department_name}}">
+                                                                                <label for="">Faculty Name</label>
+                                                                                <input type="text" class="form-control" name="facultyName" value="{{$faculty->faculty_name}}">
                                                                             </div>
                                                     
                                                                             <div class="col-md-12 form-group">
-                                                                                <label for="">Department Initial</label>
-                                                                                <input type="text" class="form-control" name="departmentInitial" value="{{$department->department_initial}}">
-                                                                            </div>
-                                                    
-                                                                            <div class="col-md-12 form-group">
-                                                                                <label for="">Faculty</label>
-                                                                                <select name="faculty" class="form-control" id="">
-                                                                                    <option value="">-- select Faculty --</option>
-                                                                                    <option value="">{{ $department->faculty->faculty_name }}</option>
-                                                                                    @foreach ($faculties as $faculty)
-                                                                                        <option value="{{ $faculty->id }}">{{ $faculty->faculty_name }}</option>
-                                                                                    @endforeach
-                                                                                </select>
+                                                                                <label for="">Faculty Initial</label>
+                                                                                <input type="text" class="form-control" name="facultyInitial" value="{{$faculty->faculty_initial}}">
                                                                             </div>
                                                     
                                                                         </div>

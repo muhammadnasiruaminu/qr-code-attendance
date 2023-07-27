@@ -50,7 +50,7 @@
                                         <td>{{$curriculum->course_unit}}</td>
                                         <td>{{$curriculum->created_at}}</td>
                                         <td>
-                                            <button class="btn" data-target="#editCurriculumModal{{ $curriculum->uuid }}" data-toggle="modal">edit</button>
+                                            <button class="btn" data-target="#editCurriculumModal{{ $curriculum->uuid }}" data-toggle="modal"><span class="fa fa-edit text-primary">edit</span></button>
                                             <!-- update curriculum mosdal -->
                                             <div class="modal" id="editCurriculumModal{{ $curriculum->uuid }}">
                                                 <div class="modal-dialog">

@@ -34,6 +34,7 @@ return array(
     'App\\Models\\CreateAttendance' => $baseDir . '/app/Models/CreateAttendance.php',
     'App\\Models\\Curriculum' => $baseDir . '/app/Models/Curriculum.php',
     'App\\Models\\Department' => $baseDir . '/app/Models/Department.php',
+    'App\\Models\\Faculty' => $baseDir . '/app/Models/Faculty.php',
     'App\\Models\\JoinAttendance' => $baseDir . '/app/Models/JoinAttendance.php',
     'App\\Models\\Player' => $baseDir . '/app/Models/Player.php',
     'App\\Models\\Staff' => $baseDir . '/app/Models/Staff.php',

@@ -51,7 +51,7 @@
                                                 <td>{{$user->email}}</td>
                                                 <td>{{$user->phone_number}}</td>
                                                 <td>
-                                                    <button class="btn" data-toggle="modal" data-target="#editUserModal{{ $user->uuid }}"><span class="text-primary">edit</span></button>
+                                                    <button class="btn" data-toggle="modal" data-target="#editUserModal{{ $user->uuid }}"><span class="text-primary"><span class="fa fa-edit"></span></span></button>
                                                 </td>
                                                 <!-- edit user modal -->
                                                     <div class="modal" id="editUserModal{{ $user->uuid }}">

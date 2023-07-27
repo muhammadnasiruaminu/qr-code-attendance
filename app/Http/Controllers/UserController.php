@@ -198,7 +198,7 @@ class UserController extends Controller
             // check so as not to attend same lecture twice
             $checkDouble    =   JoinAttendance::where(['registration_number' => Auth::guard('student')->user()->registration_number, 'create_attendances_uuid' => $check->uuid])->first();
             if ( $checkDouble) {
-                return redirect()->back()->with('error', 'Attendance already captured.');
+                return redirect()->route('student.index')->with('error', 'Attendance already captured.');
             } else {
                 $save  = [
                     'uuid'                   =>    Str::orderedUuid(),

@@ -65,7 +65,7 @@
                                     <th>Starts</th>
                                     <th>Ends</th>
                                     <th>Created Date</th>
-                                    <th>Actions</th>
+                                    <th class="text-center">Actions</th>
                                   </tr>
                                 </thead>
                                 <tbody>

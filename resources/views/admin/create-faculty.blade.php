@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Create Departments</title>
+    <title>Create Faculty</title>
     <link rel="stylesheet" href="{{asset('bootstrap.min.css')}}">
     <style>
         body{
@@ -28,23 +28,13 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <label for="">Department Name</label>
-                            <input type="text" class="form-control" name="departmentName">
+                            <label for="">Faculty Name</label>
+                            <input type="text" class="form-control" name="facultyName">
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <label for="">Department Initial</label>
-                            <input type="text" class="form-control" name="departmentInitial">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <label for="">Faculty</label>
-                            <select name="faculty" class="form-control" id="">
-                                <option value="">-- select Faculty --</option>
-                                @foreach ($faculties as $faculty)
-                                    <option value="{{ $faculty->id }}">{{ $faculty->faculty_name }}</option>
-                                @endforeach
-                            </select>
+                            <label for="">Faculty Initial</label>
+                            <input type="text" class="form-control" name="facultyInitial">
                         </div>
 
                         <div class="col-md-12">

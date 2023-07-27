@@ -584,6 +584,7 @@ class ComposerStaticInit26dbaefc757af1222b94c1fd963dbfa2
         'App\\Models\\CreateAttendance' => __DIR__ . '/../..' . '/app/Models/CreateAttendance.php',
         'App\\Models\\Curriculum' => __DIR__ . '/../..' . '/app/Models/Curriculum.php',
         'App\\Models\\Department' => __DIR__ . '/../..' . '/app/Models/Department.php',
+        'App\\Models\\Faculty' => __DIR__ . '/../..' . '/app/Models/Faculty.php',
         'App\\Models\\JoinAttendance' => __DIR__ . '/../..' . '/app/Models/JoinAttendance.php',
         'App\\Models\\Player' => __DIR__ . '/../..' . '/app/Models/Player.php',
         'App\\Models\\Staff' => __DIR__ . '/../..' . '/app/Models/Staff.php',

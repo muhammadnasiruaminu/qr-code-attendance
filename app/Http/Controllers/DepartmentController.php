@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faculty;
 use App\Models\Department;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -15,8 +16,9 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $departments    =   Department::all();
-        return view('admin.department', ['departments' => $departments]);
+        $departments    =   Department::with('faculty')->get();
+        $faculty    =   Faculty::all();
+        return view('admin.department', ['departments' => $departments, 'faculties' => $faculty]);
 
     }
 
@@ -27,8 +29,8 @@ class DepartmentController extends Controller
      */
     public function create()
     {
-        //
-        return view('admin.create-department');
+        $faculty    =   Faculty::all();
+        return view('admin.create-department', ['faculties' => $faculty]);
     }
 
     /**
@@ -39,7 +41,6 @@ class DepartmentController extends Controller
      */
     public function store(Request $request)
     {
-        //
         $request->validate([
             'departmentName'  => 'required|string',
             'departmentInitial'  => 'required|string',
@@ -50,7 +51,7 @@ class DepartmentController extends Controller
             'uuid'               =>  Str::orderedUuid(),
             'department_name'    =>  $request->departmentName,
             'department_initial' =>  $request->departmentInitial,
-            'faculty'            =>  $request->faculty
+            'faculty_id'            =>  $request->faculty
         ]);
 
         if ($dept) {
@@ -102,7 +103,7 @@ class DepartmentController extends Controller
         $editDept               =   Department::where('uuid', $uuid)->update([
             'department_name'   =>  $request->departmentName,
             'department_initial'=>  $request->departmentInitial,
-            'faculty'           =>  $request->faculty,
+            'faculty_id'        =>  $request->faculty,
         ]);
 
         if ($editDept) {

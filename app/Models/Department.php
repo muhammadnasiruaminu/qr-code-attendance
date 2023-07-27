@@ -13,11 +13,16 @@ class Department extends Model
         'uuid',
         'department_name',
         'department_initial',
-        'faculty',
+        'faculty_id',
     ];
 
     public function courseOfStudy()
     {
         return $this->hasMany(CourseOfStudy::class, 'department_uuid', 'uuid');
+    }
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class);
     }
 }
