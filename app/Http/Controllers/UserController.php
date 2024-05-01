@@ -191,7 +191,8 @@ class UserController extends Controller
 
     public function authenticateStudentPage($token)
     {
-        $check   =   CreateAttendance::where(['token' => $token, 'active_status' => '1'])->where('ends_at', '>=', date('H:i'))->first();
+        $check   =   CreateAttendance::where(['token' => $token, 'active_status' => '1'])->first();
+        // $check   =   CreateAttendance::where(['token' => $token, 'active_status' => '1'])->where('ends_at', '>=', date('H:i'))->first();
         // return $check->ends_at.' with '. date('H:i');
         // return date('g-i'); where ends is <= now
         if ($check) {
@@ -205,6 +206,8 @@ class UserController extends Controller
                     'names'                  =>    Auth::guard('student')->user()->names,
                     'registration_number'    =>    Auth::guard('student')->user()->registration_number,
                     'create_attendances_uuid'=>    $check->uuid,
+                    'used_token'             =>    $token,
+                    'created_at'             =>    now(),
                 ];
 
                 $attend  =   JoinAttendance::insertOrIgnore($save);
@@ -212,14 +215,22 @@ class UserController extends Controller
             }
             
             if ($attend) {
-                return redirect()->route('student.index')->with('success', 'Attendance captured successfully, Thank you.');
+
+                $newToken = CreateAttendance::where(['token' => $token])->update(['token' => Str::random(50)]);
+
+                if ($newToken) {
+                    return redirect()->route('student.index')->with('success', 'Attendance captured successfully, Thank you.');
+                } else {
+                    return redirect()->back()->with('error', 'Something wents wrong');
+                }
+                
             } else {
                 return redirect()->route('student.index')->with('error', 'Something wents wrong.');
             }
-            
 
         } else {
-            return redirect()->route('student.index')->with('error', 'Attendance not found, kindly contact administrator.');
+            return redirect()->route('student.index')->with('error', 'Invalid QR Code, please try again.');
+            // return redirect()->route('student.index')->with('error', 'Attendance not found, kindly contact administrator.');
  
         }
         
