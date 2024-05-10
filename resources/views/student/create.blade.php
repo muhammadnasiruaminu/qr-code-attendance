@@ -23,12 +23,13 @@
 
             <div class="col-md-4 offset-md-4 bg-light" style="padding:20px; background-color:#f8f9fa;">
                 @include('messages')
-                <form action="" method="POST">
+                <form action="{{ route('student.store') }}" method="POST">
                     @csrf
                     <div class="row">
                         <div class="col-md-12 form-group">
                             <label for="">Registration Number</label>
-                            <input type="text" class="form-control" name="registrationNumber" value="">
+                            <input type="hidden" class="form-control" name="registrationNumber" value="{{ $check->registration_number }}">
+                            <input type="text" class="form-control" name="registrationNumber" value="{{ $check->registration_number }}" disabled>
                         </div>
 
                         {{-- <div class="col-md-12 form-group">
@@ -38,7 +39,8 @@
 
                         <div class="col-md-12 form-group">
                             <label for="">Full Name</label>
-                            <input type="text" class="form-control" name="fullName" value="">
+                            <input type="hidden" class="form-control" name="fullName" value="{{ $check->names }}">
+                            <input type="text" class="form-control" name="fullName" value="{{ $check->names }}" disabled>
                         </div>
 
                         <div class="col-md-12 form-group">

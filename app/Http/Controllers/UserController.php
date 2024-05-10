@@ -11,9 +11,10 @@ use Illuminate\Http\Request;
 use App\Imports\UsersImport;
 use App\Models\CourseOfStudy;
 use App\Models\JoinAttendance;
+use App\Imports\CheckUserImport;
 use App\Models\CreateAttendance;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 
 
@@ -152,42 +153,28 @@ class UserController extends Controller
     }
     public function uploadStudentsPage()
     {
-        return view('admin.upload-students');
+        $uploads    =   CheckUser::all();
+        return view('admin.upload-students', ['uploads' => $uploads]);
     }
 
     public function uploadStudents(Request $request)
     {
-        $request->validate(['file' => 'required|mimes:xls,xlsx']);
-
-        $path   =    $request->file('file')->getRealPath();
-
-        $data   =   Excel::load($path)->get();
-
-        if ($data->count() > 0) {
-            foreach ($data->toArray() as $key => $value) {
-                foreach ($value as $row) {
-                    $insert_data[]  =  array(
-                        'names'               => $row['names'],
-                        'registration_number' => $row['registration_number'],
-                        'level'               => $row['level']
-                    );
-                }
-            }
-            if (!empty($insert_data)) {
-                // checkUser::create();
-                DB::table('check_users')->insert($insert_data);
-
-            }
+        $importStud     =    Excel::import(new CheckUserImport, $request->file('file'));
+        
+        if ($importStud ) {
+            return redirect()->back()->with('success', 'Students uploaded successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Something wents wrong.');
         }
-        return redirect()->back()->with('success', 'Students uploaded.');
+        
     }
 
-    public function uploadUsers(Request $request)
-    {
-        Excel::import(new UsersImport, $request->file);
+    // public function uploadUsers(Request $request)
+    // {
+    //     Excel::import(new UsersImport, $request->file);
 
-        return redirect()->back()->with('success', 'User Imported Successfully');
-    }
+    //     return redirect()->back()->with('success', 'User Imported Successfully');
+    // }
 
     public function authenticateStudentPage($token)
     {

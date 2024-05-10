@@ -14,10 +14,11 @@ class CreateCheckUsersTable extends Migration
     public function up()
     {
         Schema::create('check_users', function (Blueprint $table) {
-            $table->string('id');
+            $table->id();
             $table->string('names');
             $table->string('registration_number');
             $table->string('level');
+            $table->timestamps();
         });
     }
 

@@ -38,15 +38,15 @@
                                     <table border="0" width="450px;" height="100px;">
                                         <tr>
                                             <td>Names:</td>
-                                            <td><b>{{ Auth::guard('student')->user()->names}}</b></td>
+                                            <td><b>{{ Auth::guard('student')->user()->names ?? ''}}</b></td>
                                         </tr>
                                         <tr>
                                             <td>Registration Number:</td>
-                                            <td><b>{{ Auth::guard('student')->user()->registration_number}}</b></td>
+                                            <td><b>{{ Auth::guard('student')->user()->registration_number ?? ''}}</b></td>
                                         </tr>
                                         <tr>
                                             <td>Email:</td>
-                                            <td><b>{{Auth::guard('student')->user()->email}}</b></td>
+                                            <td><b>{{Auth::guard('student')->user()->email ?? ''}}</b></td>
                                         </tr>
                                     </table>
                                     <br>

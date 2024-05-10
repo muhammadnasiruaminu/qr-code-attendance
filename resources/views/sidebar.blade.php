@@ -28,5 +28,8 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ route('attendance.create') }}"><span class="fa fa-clock-o"> Attendance</span></a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('staff.uploadStudentsPage') }}"><span class="fa fa-upload">Upload Students</span></a>
+        </li>
     </ul>
 </nav>

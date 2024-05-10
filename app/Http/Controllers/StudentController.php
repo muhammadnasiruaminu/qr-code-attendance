@@ -34,9 +34,12 @@ class StudentController extends Controller
         $request->validate([
             'registrationNumber' => 'required|string|unique:students,registration_number'
         ]);
+        
         $check = CheckUser::where('registration_number',$request->registrationNumber)->first();
+        
         if ($check) {
-            return redirect()->route('student.create')->with('success','Registration Number found, you can proceed with your registration.');
+            return $this->create($check);
+            // return redirect()->route('student.create')->with(['success' => 'Registration Number found, you can proceed with your registration.', 'checkStud' => $check]);
         } else {
             return redirect()->back()->with('error', 'Registration Number not found, please contact the administrator if you are a valid student.');
         }
@@ -49,10 +52,9 @@ class StudentController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($check)
     {
-        
-        return view('student.create');
+        return view('student.create', ['check' => $check]);
     }
 
     /**
@@ -64,7 +66,7 @@ class StudentController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'registrationNumber'=>   'required|string|unique:users,registration_number',
+            'registrationNumber'=>   'required|string|unique:students,registration_number',
             // 'level'             =>   'required|string',
             'fullName'          =>   'required|string',
             'email'             =>   'required|string',

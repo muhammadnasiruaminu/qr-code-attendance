@@ -40,6 +40,9 @@ Route::get('/login', [UserController::class, 'loginPage'])->name('staff.loginPag
 Route::post('/login', [UserController::class, 'login'])->name('staff.login');
 Route::get('/logout', [UserController::class, 'logout'])->name('staff.logout');
 Route::put('update-user/{user}', [UserController::class, 'update'])->name('staff.update');
+// upload students to DB
+Route::get('/upload-students', [UserController::class, 'uploadStudentsPage'])->name('staff.uploadStudentsPage');
+Route::post('/upload-students', [UserController::class, 'uploadStudents'])->name('staff.uploadStudents');
 
 
 /* STUDENT LOGIN AND REGISTRATION */
@@ -47,18 +50,13 @@ Route::put('update-user/{user}', [UserController::class, 'update'])->name('staff
 Route::get('/check-student', [StudentController::class, 'checkStudentPage'])->name('student.checkStudentPage');
 Route::post('/check-student', [StudentController::class, 'checkStudent'])->name('student.checkstudent');
 /*  if student found i.e if reg number found, register/sign up the student */
-Route::get('/register-student', [StudentController::class, 'create'])->name('student.create');
+Route::get('/register-student/{check}', [StudentController::class, 'create'])->name('student.create');
 Route::post('/register-student', [StudentController::class, 'store'])->name('student.store');
 Route::get('/student-dashboard', [StudentController::class, 'index'])->name('student.index');
 Route::get('/student-login', [StudentController::class, 'studentLoginPage'])->name('student.loginPage');
 Route::post('/student-login', [StudentController::class, 'studentLogin'])->name('student.login');
 Route::get('/student-logout', [StudentController::class, 'studentLogout'])->name('student.logout');
 Route::get('/open-camera', [StudentController::class, 'openCamera'])->name('student.openCamera');
-
-// Route::get('/upload-students', [StudentController::class, 'uploadStudentsPage'])->name('user.uploadStudentsPage');
-// Route::post('/upload-students', [StudentController::class, 'uploadStudents'])->name('user.uploadStudents');
-
-// Route::post('/upload-users', [StudentController::class, 'uploadUsers'])->name('user.uploadUsers');
 
 
 /* course of study */
