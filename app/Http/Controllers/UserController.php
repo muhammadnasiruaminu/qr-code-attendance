@@ -138,7 +138,26 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return 'update';
+        $request->validate([
+            'names'   =>   'required|string',
+            'psn'        =>   'required|string',
+            'email'      =>   'required|string',
+            'phoneNumber'=>   'required|string',
+        ]);
+
+        $update = User::where('uuid', $id)->update([
+            'full_name'     =>  $request->names,
+            'psn'           =>  $request->psn,
+            'email'         =>  $request->email,
+            'phone_number'  =>  $request->phoneNumber,
+        ]);
+
+        if ($update ) {
+            return redirect()->back()->with('success', 'Record updated successfully.');
+        } else {
+            return redirect()->back()->with('error', 'Something wents wrong.');
+        }
+        
     }
 
     /**
@@ -168,13 +187,6 @@ class UserController extends Controller
         }
         
     }
-
-    // public function uploadUsers(Request $request)
-    // {
-    //     Excel::import(new UsersImport, $request->file);
-
-    //     return redirect()->back()->with('success', 'User Imported Successfully');
-    // }
 
     public function authenticateStudentPage($token)
     {

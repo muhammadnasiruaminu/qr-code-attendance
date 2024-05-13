@@ -30,7 +30,7 @@
 
                     <div class="col-12"><strong>Staff Dashboard</strong><a href="{{ route('staff.login') }}" class="btn float-right">Logout</a></div>
                     <div class="col-md-8 col-sm-12">
-                        <h4>Hi Mr {{ Auth::user()->full_name }}!</h4> <br>
+                        <h4>Hi {{ Auth::user()->full_name }}!</h4> <br>
 
                         <div class="container">
                             <table border="0" width="450px;" height="100px;">
